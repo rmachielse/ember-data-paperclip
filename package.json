@@ -1,7 +1,7 @@
 {
   "name": "ember-data-paperclip",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "An Ember Data attribute for using files with rails paperclip.",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -9,9 +9,10 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
-    "test": "ember try:testall"
+    "test": "ember test"
   },
-  "repository": "",
+  "homepage": "https://github.com/rmachielse/ember-data-paperclip",
+  "repository": "https://github.com/rmachielse/ember-data-paperclip.git",
   "engines": {
     "node": ">= 0.10.0"
   },
@@ -34,8 +35,7 @@
     "ember-data": "1.13.8",
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.3",
-    "ember-disable-prototype-extensions": "^1.0.0",
-    "ember-try": "0.0.6"
+    "ember-disable-prototype-extensions": "^1.0.0"
   },
   "keywords": [
     "ember-addon"

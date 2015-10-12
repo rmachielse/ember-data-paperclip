@@ -1,12 +1,11 @@
 import Ember from 'ember';
-import FileSerializerMixinMixin from '../../../mixins/file-serializer-mixin';
+import SerializerMixin from 'ember-data-paperclip/mixins/serializer-mixin';
 import { module, test } from 'qunit';
 
-module('Unit | Mixin | file serializer mixin');
+module('Unit | Mixin | SerializerMixin');
 
-// Replace this with your real tests.
 test('it works', function(assert) {
-  var FileSerializerMixinObject = Ember.Object.extend(FileSerializerMixinMixin);
-  var subject = FileSerializerMixinObject.create();
+  var SerializerMixinObject = Ember.Object.extend(SerializerMixin);
+  var subject = SerializerMixinObject.create();
   assert.ok(subject);
 });

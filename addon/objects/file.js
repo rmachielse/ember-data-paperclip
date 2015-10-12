@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Object.extend({
   path: ':class/:attachment/:id_partition/:style/:filename.jpg',
   regex: /(:[a-z_]+)/gi,
+  defaultStyle: 'original',
 
   isEmpty: true,
   isDirty: false,
@@ -36,7 +37,7 @@ export default Ember.Object.extend({
   url(style) {
     if (!this.get('isEmpty')) {
       if (Ember.isEmpty(style)) {
-        style = 'original';
+        style = this.get('defaultStyle');
       }
 
       return this.get('path').replace(this.get('regex'), (match) => {

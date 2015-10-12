@@ -1,4 +1,5 @@
 # Ember Data Paperclip
+[![Build Status](https://travis-ci.org/rmachielse/ember-data-paperclip.svg)](https://travis-ci.org/rmachielse/ember-data-paperclip)
 
 This addon provides an ember file attribute to use with [rails paperclip](https://github.com/thoughtbot/paperclip).
 Please note that the addon is still a work in progress.
@@ -7,8 +8,10 @@ Please note that the addon is still a work in progress.
 
 Add the following to your `package.json` and run `npm install`:
 
-```
-"ember-data-paperclip": "rmachielse/ember-data-paperclip"
+```javascript
+  ...
+  "ember-data-paperclip": "rmachielse/ember-data-paperclip",
+  ...
 ```
 
 After installation, add the serializer-mixin to your serializer:
@@ -17,7 +20,7 @@ After installation, add the serializer-mixin to your serializer:
 // app/serializers/application.js
 
 import DS from 'ember-data';
-import SerializerMixin from 'ember-data-paperclip';
+import SerializerMixin from 'ember-data-paperclip/mixins/serializer-mixin';
 
 export default DS.RESTAdapter.extend(SerializerMixin);
 ```
@@ -30,7 +33,7 @@ Add the following to your `config/environment.js`:
 ```javascript
 // config/environment.js
 
-  ...,
+  ...
 
   paperclip: {
     path: ':class/:attachment/:id_partition/:style/:filename.jpg'
@@ -46,7 +49,7 @@ If you need other variables or want to override the default ones, there are thre
      ```javascript
      // config/environment.js
 
-       ...,
+       ...
 
        paperclip: {
          path: ':base/:class/:attachment/:id_partition/:style/:filename.jpg',
@@ -136,7 +139,7 @@ A template helper is also available:
 You can set the file from a file upload like this:
 
 ```javascript
-  ...,
+  ...
 
   change: function (e) {
     var reader = new FileReader();
