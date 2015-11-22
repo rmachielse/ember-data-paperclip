@@ -1,13 +1,14 @@
-import { moduleFor, test } from 'ember-qunit';
+/* jshint expr:true */
+import { expect } from 'chai';
+import { describeModule, it } from 'ember-mocha';
 
-moduleFor('transform:file', 'Unit | Transform | file');
+describeModule('transform:file', 'FileTransform', function() {
+  it('exists', function() {
+    let transform = this.subject();
 
-test('it exists', function(assert) {
-  assert.expect(3);
+    expect(transform).to.be.ok;
 
-  var transform = this.subject();
-
-  assert.ok(transform);
-  assert.equal(typeof(transform.serialize), 'function');
-  assert.equal(typeof(transform.deserialize), 'function');
+    expect(typeof transform.serialize).to.equal('function');
+    expect(typeof transform.deserialize).to.equal('function');
+  });
 });

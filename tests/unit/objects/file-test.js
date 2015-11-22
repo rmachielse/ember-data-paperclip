@@ -1,8 +1,10 @@
-import { moduleFor, test } from 'ember-qunit';
+/* jshint expr:true */
+import { expect } from 'chai';
+import { describeModule, it } from 'ember-mocha';
 
-moduleFor('object:file', 'Unit | Object | file');
-
-test('it exists', function(assert) {
-  var object = this.subject();
-  assert.ok(object);
+describeModule('object:file', 'FileObject', function() {
+  it('exists', function() {
+    let object = this.subject();
+    expect(object).to.be.ok;
+  });
 });

@@ -1,11 +1,15 @@
+/* jshint expr:true */
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
 import Ember from 'ember';
-import SerializerMixin from 'ember-data-paperclip/mixins/serializer-mixin';
-import { module, test } from 'qunit';
+import SerializerMixinMixin from 'ember-data-paperclip/mixins/serializer-mixin';
 
-module('Unit | Mixin | SerializerMixin');
+describe('SerializerMixin', function() {
+  it('works', function() {
+    const SerializerMixinObject = Ember.Object.extend(SerializerMixinMixin);
 
-test('it works', function(assert) {
-  var SerializerMixinObject = Ember.Object.extend(SerializerMixin);
-  var subject = SerializerMixinObject.create();
-  assert.ok(subject);
+    let mixin = SerializerMixinObject.create();
+
+    expect(mixin).to.be.ok;
+  });
 });

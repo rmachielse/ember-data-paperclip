@@ -1,17 +1,17 @@
-import { fileUrl } from '../../../helpers/file-url';
-import File from '../../../objects/file';
-import { module, test } from 'qunit';
+/* jshint expr:true */
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import { fileUrl } from 'ember-data-paperclip/helpers/file-url';
+import File from 'ember-data-paperclip/objects/file';
 
-module('Unit | Helper | file url');
+describe('FileUrlHelper', function() {
+  it('works', function() {
+    let file = File.create({
+      isEmpty: false,
+      path: 'files/:style.jpg'
+    });
 
-test('it works', function(assert) {
-  assert.expect(2);
-
-  var file = File.create({
-    isEmpty: false,
-    path: 'files/:style.jpg'
+    expect(fileUrl([file])).to.equal('files/original.jpg');
+    expect(fileUrl([file, 'thumbnail'])).to.equal('files/thumbnail.jpg');
   });
-
-  assert.equal(fileUrl([file]), 'files/original.jpg');
-  assert.equal(fileUrl([file, 'thumbnail']), 'files/thumbnail.jpg');
 });

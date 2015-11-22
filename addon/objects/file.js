@@ -1,39 +1,119 @@
 import Ember from 'ember';
 
+/**
+ * The File object
+ *
+ * @class FileObject
+ * @module ember-data-paperclip/objects/file
+ * @extends Ember.Object
+ * @private
+ */
 export default Ember.Object.extend({
-  path: ':class/:attachment/:id_partition/:style/:filename.jpg',
-  regex: /(:[a-z_]+)/gi,
-  defaultStyle: 'original',
-
-  isEmpty: true,
-  isDirty: false,
-
-  data: null,
-
   store: Ember.inject.service(),
 
+  /**
+   * A regex to match path variables using semicolons
+   *
+   * @private
+   */
+  regex: /(:[a-z_]+)/gi,
+
+  /**
+   * The default path
+   *
+   * @public
+   */
+  path: ':class/:attachment/:id_partition/:style/:filename.jpg',
+
+  /**
+   * The default style
+   *
+   * @public
+   */
+  defaultStyle: 'original',
+
+  /**
+   * Wether the file has been set
+   *
+   * @public
+   */
+  isEmpty: true,
+
+  /**
+   * Wether the file has been changed
+   *
+   * @public
+   */
+  isDirty: false,
+
+  /**
+   * The base64 file source
+   *
+   * If set, the data will be sent to the server on save
+   *
+   * @public
+   */
+  data: null,
+
+  /**
+   * The parent model
+   *
+   * The model that the file is an attribute on
+   *
+   * @private
+   */
   model: Ember.computed('class', 'id', function() {
     return this.get('store').find(this.get('modelName'), this.get('id'));
   }),
 
+  /**
+   *
+   *
+   * @public
+   */
   class: Ember.computed('modelName', function() {
     return this.get('modelName').pluralize();
   }),
 
+  /**
+   *
+   *
+   * @public
+   */
   attachment: Ember.computed('key', function() {
     return this.get('key').pluralize();
   }),
 
+  /**
+   *
+   *
+   * @public
+   */
   id_partition: Ember.computed('id', function() {
-    var id = parseInt(this.get('id'));
+    let id = parseInt(this.get('id'));
 
     if (isNaN(id)) {
-      return id.replace(/(....)/g, "/$1").slice(1);
+      return id.replace(/(....)/g, '/$1').slice(1);
     } else {
-      return id.pad(9).replace(/(...)/g, "/$1").slice(1);
+      return id.pad(9).replace(/(...)/g, '/$1').slice(1);
     }
   }),
 
+  /**
+   * Generate urls for different styles
+   *
+   * ```javascript
+   * var url = product.get('photo').url();
+   * // products/photos/000/000/001/original/data.jpg
+   *
+   * var thumbnailUrl = product.get('photo').url('thumbnail');
+   * // products/photos/000/000/001/thumbnail/data.jpg
+   * ```
+   *
+   * @param {String} [style=defaultStyle] - The style to generate a url for
+   * @return {String} The generated url
+   * @public
+   */
   url(style) {
     if (!this.get('isEmpty')) {
       if (Ember.isEmpty(style)) {
@@ -54,34 +134,165 @@ export default Ember.Object.extend({
     }
   },
 
-  contents(style) {
-    var url = this.url(style);
+  /**
+   * Get blob data for a file
+   *
+   * @param {String} [style=defaultStyle] - The style to get the blob contents for
+   * @return {Blob} The requested blob
+   * @public
+   */
+  blob(style) {
+    let url = this.url(style);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      var xhr = new XMLHttpRequest();
+      let xhr = new XMLHttpRequest();
 
       xhr.open('GET', url, true);
       xhr.responseType = 'blob';
       xhr.onload = (e) => {
-        resolve(window.URL.createObjectURL(e.target.response));
+        resolve(e.target.response);
       };
       xhr.onerror = reject;
-
       xhr.send();
     });
   },
 
+  /**
+   * Get the objectURL of a file
+   *
+   * ```javascript
+   * product.get('photo').objectURL('thumbnail').then((thumbnailObjectURL) => {
+   *   console.log(thumbnailObjectURL);
+   * });
+   * ```
+   *
+   * @param {String} [style=defaultStyle] - The style to generate the objectURL for
+   * @return {Ember.RSVP.Promise} A promise object that resolves with the object url
+   * @public
+   */
+  objectURL(style) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this.blob(style).then((blob) => {
+        resolve(window.URL.createObjectURL(blob));
+      }, reject);
+    });
+  },
+
+  /**
+   * Get the base64 dataURL of a file
+   *
+   * ```javascript
+   * product.get('photo').dataURL('thumbnail').then((thumbnailDataURL) => {
+   *   window.open(thumbnailDataURL);
+   * });
+   * ```
+   *
+   * @param {String} [style=defaultStyle] - The style to generate the dataURL for
+   * @return {Ember.RSVP.Promise} A promise object that resolves with the data url
+   * @public
+   */
+  dataURL(style) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this.blob(style).then((blob) => {
+        let reader = new FileReader();
+
+        reader.onload = (e) => {
+          resolve(e.target.result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataUrl(blob);
+      }, reject);
+    });
+  },
+
+  /**
+   * Update the file source
+   *
+   * ```javascript
+   *   ...
+   *
+   *   change: function (e) {
+   *     this.get('product').set('photo', e.target.files[0]);
+   *   },
+   *
+   *   ...
+   * ```
+   *
+   * When the model is saved, the json will look like this:
+   *
+   * ```javascript
+   * // POST /products/1
+   *
+   * {
+   *   "product": {
+   *     "id": 1,
+   *     "photo": "[base64data]"
+   *   }
+   * }
+   * ```
+   *
+   * @param {File} file - The resulting file from a file upload or drop action
+   * @return {Ember.RSVP.Promise} - A promise object that resolves when the source has been succesfully set
+   * @public
+   */
+  update(file) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let reader = new FileReader();
+
+      reader.onload = (e) => {
+        this.set('data', e.target.result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataUrl(file);
+    });
+  },
+
+  /**
+   * Clear the file
+   *
+   * ```javascript
+   * product.get('photo').clear();
+   * product.save();
+   * ```
+   *
+   * This will result in an empty file object when the model is being saved:
+   * ```javascript
+   * // POST /products/1
+   *
+   * {
+   *   "product": {
+   *     "id": 1,
+   *     "photo": null
+   *   }
+   * }
+   * ```
+   *
+   * @public
+   */
   clear() {
     this.set('isEmpty', true);
     this.set('isDirty', true);
   },
 
+  /**
+   * Recover the file
+   *
+   * This will undo a clear action
+   *
+   * @public
+   */
   recover() {
     this.set('isEmpty', false);
     this.set('isDirty', true);
   },
 
-  serialize () {
+  /**
+   * Serialize the file object to json
+   *
+   * @return {Object} The json data
+   * @private
+   */
+  serialize() {
     if (!this.get('isEmpty')) {
       return this.get('data');
     }

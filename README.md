@@ -120,11 +120,19 @@ var thumbnailUrl = product.get('photo').url('thumbnail');
 // products/photos/000/000/001/thumbnail/data.jpg
 ```
 
-You can also retrieve the base64 contents of the file:
+You can retrieve the object URL of the file like this:
 
 ```javascript
-product.get('photo').contents('thumbnail').then((thumbnailData) => {
-  // render <img src="{{thumbnailData}}" />
+product.get('photo').objectURL('thumbnail').then((thumbnailObjectURL) => {
+  console.log(thumbnailObjectURL);
+});
+```
+
+You can also retrieve the base64 data URL of the file:
+
+```javascript
+product.get('photo').dataURL('thumbnail').then((thumbnailDataURL) => {
+  window.open(thumbnailDataURL);
 });
 ```
 
@@ -142,11 +150,7 @@ You can set the file from a file upload like this:
   ...
 
   change: function (e) {
-    var reader = new FileReader();
-    reader.onload = (e) => {
-      product.set('photo.data', e.target.result);
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    this.get('product').set('photo', e.target.files[0]);
   },
 
   ...
@@ -185,6 +189,9 @@ This will send the following to the backend:
   }
 }
 ```
+
+### Limitations
+- FormData is not yet supported. Uploads happen using json and base64 at the moment.
 
 ## License
 
