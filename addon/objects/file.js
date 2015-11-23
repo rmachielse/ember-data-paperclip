@@ -1,15 +1,18 @@
 import Ember from 'ember';
 
+const { RSVP, Object, Evented, inject, computed, isEmpty } = Ember;
+const { Promise } = RSVP;
+const { service } = inject;
+
 /**
  * The File object
  *
- * @class FileObject
  * @module ember-data-paperclip/objects/file
  * @extends Ember.Object
  * @private
  */
-export default Ember.Object.extend({
-  store: Ember.inject.service(),
+export default Object.extend(Evented, {
+  store: service(),
 
   /**
    * A regex to match path variables using semicolons
@@ -33,6 +36,13 @@ export default Ember.Object.extend({
   defaultStyle: 'original',
 
   /**
+   * Wether the file is new on this model
+   *
+   * @public
+   */
+  isNew: false,
+
+  /**
    * Wether the file has been set
    *
    * @public
@@ -47,11 +57,25 @@ export default Ember.Object.extend({
   isDirty: false,
 
   /**
-   * Wether the file has been set or changed
+   * The key on the model for this file object
    *
    * @public
    */
-  isEmptyOrDirty: Ember.computed.or('isEmpty', 'isDirty'),
+  key: null,
+
+  /**
+   * The model name of the parent model
+   *
+   * @public
+   */
+  modelName: null,
+
+  /**
+   * The id of the parent model
+   *
+   * @public
+   */
+  id: null,
 
   /**
    * The base64 file source
@@ -63,40 +87,47 @@ export default Ember.Object.extend({
   data: null,
 
   /**
+   * The attributes names retrieved through JSON
+   *
+   * @public
+   */
+  attributes: [],
+
+  /**
    * The parent model
    *
    * The model that the file is an attribute on
    *
    * @private
    */
-  model: Ember.computed('class', 'id', function() {
+  model: computed('class', 'id', function() {
     return this.get('store').find(this.get('modelName'), this.get('id'));
   }),
 
   /**
-   *
+   * The class name of the model
    *
    * @public
    */
-  class: Ember.computed('modelName', function() {
+  class: computed('modelName', function() {
     return this.get('modelName').pluralize();
   }),
 
   /**
-   *
+   * The name of the attachment
    *
    * @public
    */
-  attachment: Ember.computed('key', function() {
+  attachment: computed('key', function() {
     return this.get('key').pluralize();
   }),
 
   /**
-   *
+   * The id, partitioned in parts
    *
    * @public
    */
-  id_partition: Ember.computed('id', function() {
+  id_partition: computed('id', function() {
     let id = parseInt(this.get('id'));
 
     if (isNaN(id)) {
@@ -105,6 +136,38 @@ export default Ember.Object.extend({
       return id.pad(9).replace(/(...)/g, '/$1').slice(1);
     }
   }),
+
+  /**
+   * The variables that are used by `path`
+   *
+   * @public
+   */
+  variables: computed('path', function() {
+    return this.get('path').match(this.get('regex')).map((match) => {
+      match = match.slice(1);
+
+      if (!isEmpty(this.get(`model.${match}`))) {
+        return match;
+      } else if (!isEmpty(this.get(match))) {
+        return `${this.get('key')}.${match}`;
+      }
+    }).compact();
+  }),
+
+  /**
+   * The initialize method
+   *
+   * Subscribes the object on the model's `rolledBack` event
+   *
+   * @private
+   */
+  init() {
+    if (!isEmpty(this.get('model'))) {
+      this.get('model').then(() => {
+        this.get('model.content').on('rolledBack', this, this.rollback);
+      });
+    }
+  },
 
   /**
    * Generate urls for different styles
@@ -122,8 +185,8 @@ export default Ember.Object.extend({
    * @public
    */
   url(style) {
-    if (!this.get('isEmpty')) {
-      if (Ember.isEmpty(style)) {
+    if (!this.get('isNew') && !this.get('isEmpty')) {
+      if (isEmpty(style)) {
         style = this.get('defaultStyle');
       }
 
@@ -132,9 +195,9 @@ export default Ember.Object.extend({
 
         if (match === 'style') {
           return style;
-        } else if (!Ember.isEmpty(this.get(`model.${match}`))) {
+        } else if (!isEmpty(this.get(`model.${match}`))) {
           return this.get(`model.${match}`);
-        } else if (!Ember.isEmpty(this.get(match))) {
+        } else if (!isEmpty(this.get(match))) {
           return this.get(match);
         }
       });
@@ -149,19 +212,27 @@ export default Ember.Object.extend({
    * @public
    */
   blob(style) {
-    let url = this.url(style);
+    if (!this.get('isNew') && !this.get('isEmpty')) {
+      if (isEmpty(style)) {
+        style = this.get('defaultStyle');
+      }
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let xhr = new XMLHttpRequest();
+      let url = this.url(style);
 
-      xhr.open('GET', url, true);
-      xhr.responseType = 'blob';
-      xhr.onload = (e) => {
-        resolve(e.target.response);
-      };
-      xhr.onerror = reject;
-      xhr.send();
-    });
+      return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('GET', url, true);
+
+        xhr.responseType = 'blob';
+        xhr.onload = (e) => {
+          resolve(e.target.response);
+        };
+        xhr.onerror = reject;
+
+        xhr.send();
+      });
+    }
   },
 
   /**
@@ -178,8 +249,12 @@ export default Ember.Object.extend({
    * @public
    */
   objectURL(style) {
-    if (!this.get('isEmpty')) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
+    if (!this.get('isNew') && !this.get('isEmpty')) {
+      if (isEmpty(style)) {
+        style = this.get('defaultStyle');
+      }
+
+      return new Promise((resolve, reject) => {
         this.blob(style).then((blob) => {
           resolve(window.URL.createObjectURL(blob));
         }, reject);
@@ -201,8 +276,12 @@ export default Ember.Object.extend({
    * @public
    */
   dataURL(style) {
-    if (!this.get('isEmpty')) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
+    if (!this.get('isNew') && !this.get('isEmpty')) {
+      if (isEmpty(style)) {
+        style = this.get('defaultStyle');
+      }
+
+      return new Promise((resolve, reject) => {
         this.blob(style).then((blob) => {
           let reader = new FileReader();
 
@@ -210,6 +289,7 @@ export default Ember.Object.extend({
             resolve(e.target.result);
           };
           reader.onerror = reject;
+
           reader.readAsDataURL(blob);
         }, reject);
       });
@@ -247,7 +327,7 @@ export default Ember.Object.extend({
    * @public
    */
   update(file) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let reader = new FileReader();
 
       reader.onload = (e) => {
@@ -256,6 +336,7 @@ export default Ember.Object.extend({
         this.set('isDirty', true);
       };
       reader.onerror = reject;
+
       reader.readAsDataURL(file);
     });
   },
@@ -295,8 +376,8 @@ export default Ember.Object.extend({
    * @public
    */
   rollback() {
-    this.set('isEmpty', false);
-    this.set('isDirty', true);
+    this.set('isEmpty', this.get('isNew'));
+    this.set('isDirty', false);
   },
 
   /**

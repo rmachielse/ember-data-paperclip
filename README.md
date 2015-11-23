@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/rmachielse/ember-data-paperclip.svg)](https://travis-ci.org/rmachielse/ember-data-paperclip)
 
 This addon provides an ember file attribute to use with [rails paperclip](https://github.com/thoughtbot/paperclip).
-Please note that the addon is still a work in progress.
+Please note that this addon is still a work in progress.
 
 ## Installation
 
@@ -133,6 +133,25 @@ You can also retrieve the base64 data URL of the file:
 ```javascript
 product.get('photo').dataURL('thumbnail').then((thumbnailDataURL) => {
   window.open(thumbnailDataURL);
+});
+```
+
+Utilities to use these urls like computed properties are available as well:
+
+```javascript
+import DS from 'ember-data';
+import fileURL from 'ember-data-paperclip/utils/file-url';
+import dataURL from 'ember-data-paperclip/utils/data-url';
+import objectURL from 'ember-data-paperclip/utils/object-url';
+
+export DS.Model.extend({
+  photo: DS.attr('file'),
+
+  photoThumbnailURL: fileURL('photo', 'thumbnail'),
+
+  photoThumbnailDataURL: dataURL('photo', 'thumbnail'),
+
+  photoObjectURL: objectURL('photo')
 });
 ```
 

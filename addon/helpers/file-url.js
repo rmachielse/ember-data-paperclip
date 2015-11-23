@@ -1,5 +1,8 @@
 import Ember from 'ember';
 
+const { Helper } = Ember;
+const { helper } = Helper;
+
 export function fileUrl(params) {
   let [file, style] = params;
 
@@ -13,8 +16,7 @@ export function fileUrl(params) {
  * {{file-url product.photo 'thumbnail'}}
  * ```
  *
- * @class FileUrlHelper
  * @module ember-data-paperclip/helpers/file-url
  * @public
  */
-export default Ember.Helper.helper(fileUrl);
+export default helper(fileUrl);

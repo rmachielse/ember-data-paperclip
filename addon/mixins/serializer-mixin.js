@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+const { Mixin } = Ember;
+
 /**
  * A mixin for the Ember Data serializer
  *
@@ -12,12 +14,11 @@ import Ember from 'ember';
  * export default DS.ActiveModelSerializer.extend(SerializerMixin);
  * ```
  *
- * @class SerializerMixin
  * @module ember-data-paperclip/mixins/serializer-mixin
  * @extends Ember.Mixin
  * @public
  */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    * normalize
    *

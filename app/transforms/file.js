@@ -2,6 +2,9 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import config from '../config/environment';
 
+const { isEmpty } = Ember;
+const { Transform } = DS;
+
 /**
  * A file transform for Ember-Data.
  *
@@ -19,7 +22,7 @@ import config from '../config/environment';
  * @module app/transforms/file
  * @private
  */
-export default DS.Transform.extend({
+export default Transform.extend({
   /**
    * Deserialize file json to a file object
    *
@@ -32,7 +35,9 @@ export default DS.Transform.extend({
       key: key,
       modelName: typeClass.modelName,
       id: id,
-      isEmpty: Ember.isEmpty(serialized)
+      isNew: isEmpty(serialized),
+      isEmpty: isEmpty(serialized),
+      attributes: Object.keys(serialized || {})
     });
   },
 
