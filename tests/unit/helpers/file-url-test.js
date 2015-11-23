@@ -1,17 +1,28 @@
 /* jshint expr:true */
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { fileUrl } from 'ember-data-paperclip/helpers/file-url';
 import File from 'ember-data-paperclip/objects/file';
 
 describe('FileUrlHelper', function() {
-  it('works', function() {
-    let file = File.create({
+  let file;
+
+  beforeEach(() => {
+    file = File.create({
       isEmpty: false,
       path: 'files/:style.jpg'
     });
+  });
 
-    expect(fileUrl([file])).to.equal('files/original.jpg');
-    expect(fileUrl([file, 'thumbnail'])).to.equal('files/thumbnail.jpg');
+  describe('without a given style', () => {
+    it('should return a file url', () => {
+      expect(fileUrl([file])).to.equal('files/original.jpg');
+    });
+  });
+
+  describe('with style thumbnail', () => {
+    it('should return a file url', () => {
+      expect(fileUrl([file, 'thumbnail'])).to.equal('files/thumbnail.jpg');
+    });
   });
 });

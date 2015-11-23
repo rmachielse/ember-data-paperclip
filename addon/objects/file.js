@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { RSVP, Object, Evented, inject, computed, isEmpty } = Ember;
+const { RSVP, Evented, A, inject, computed, isEmpty } = Ember;
 const { Promise } = RSVP;
 const { service } = inject;
 
@@ -11,7 +11,7 @@ const { service } = inject;
  * @extends Ember.Object
  * @private
  */
-export default Object.extend(Evented, {
+export default Ember.Object.extend(Evented, {
   store: service(),
 
   /**
@@ -100,8 +100,10 @@ export default Object.extend(Evented, {
    *
    * @private
    */
-  model: computed('class', 'id', function() {
-    return this.get('store').find(this.get('modelName'), this.get('id'));
+  model: computed('modelName', 'id', function() {
+    if (!isEmpty(this.get('modelName')) && !isEmpty(this.get('id'))) {
+      return this.get('store').find(this.get('modelName'), this.get('id'));
+    }
   }),
 
   /**
@@ -143,7 +145,7 @@ export default Object.extend(Evented, {
    * @public
    */
   variables: computed('path', function() {
-    return this.get('path').match(this.get('regex')).map((match) => {
+    return new A(new A(this.get('path').match(this.get('regex')).map((match) => {
       match = match.slice(1);
 
       if (!isEmpty(this.get(`model.${match}`))) {
@@ -151,7 +153,7 @@ export default Object.extend(Evented, {
       } else if (!isEmpty(this.get(match))) {
         return `${this.get('key')}.${match}`;
       }
-    }).compact();
+    })).compact());
   }),
 
   /**

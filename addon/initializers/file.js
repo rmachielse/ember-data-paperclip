@@ -5,7 +5,7 @@ const { RootState } = DS;
 export function initialize() {
   RootState.rolledBack = function(internalModel) {
     internalModel.triggerLater('rolledBack');
-  }
+  };
 }
 
 /**
