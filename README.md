@@ -22,7 +22,7 @@ After installation, add the serializer-mixin to your serializer:
 import DS from 'ember-data';
 import SerializerMixin from 'ember-data-paperclip/mixins/serializer-mixin';
 
-export default DS.RESTAdapter.extend(SerializerMixin);
+export default DS.ActiveModelSerializer.extend(SerializerMixin);
 ```
 
 ## Configuration
@@ -150,7 +150,7 @@ You can set the file from a file upload like this:
   ...
 
   change: function (e) {
-    this.get('product').set('photo', e.target.files[0]);
+    this.get('product').get('photo').update(e.target.files[0]);
   },
 
   ...

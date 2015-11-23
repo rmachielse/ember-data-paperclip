@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 /**
- * A mixin for the Ember Data adapter
+ * A mixin for the Ember Data serializer
  *
  * ```javascript
  * // app/serializers/application.js
@@ -9,7 +9,7 @@ import Ember from 'ember';
  * import DS from 'ember-data';
  * import SerializerMixin from 'ember-data-paperclip/mixins/serializer-mixin';
  *
- * export default DS.RESTAdapter.extend(SerializerMixin);
+ * export default DS.ActiveModelSerializer.extend(SerializerMixin);
  * ```
  *
  * @class SerializerMixin
@@ -19,22 +19,44 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   /**
+   * normalize
+   *
+   * Behaves like it's parent but provides applyTransforms with id as well
+   *
+   * @private
+   */
+  normalize(modelClass, resourceHash) {
+    let data = null;
+
+    if (resourceHash) {
+      this.normalizeUsingDeclaredMapping(modelClass, resourceHash);
+
+      data = {
+        id:            this.extractId(modelClass, resourceHash),
+        type:          modelClass.modelName,
+        attributes:    this.extractAttributes(modelClass, resourceHash),
+        relationships: this.extractRelationships(modelClass, resourceHash)
+      };
+
+      this.applyTransforms(modelClass, data.attributes, data.id);
+    }
+
+    return { data };
+  },
+  /**
    * Transforms attributes
    *
    * Behaves like it's parent but provides transforms with more contextual data
    *
    * @private
    */
-  applyTransforms(typeClass, data) {
+  applyTransforms(typeClass, data, id) {
     typeClass.eachTransformedAttribute((key, attributeType) => {
       if (!data.hasOwnProperty(key)) {
         return;
       }
 
       let transform = this.transformFor(attributeType);
-      let primaryKey = this.get('primaryKey');
-      let id = data[primaryKey];
-
       data[key] = transform.deserialize(data[key], key, typeClass, id);
     });
 
@@ -48,9 +70,9 @@ export default Ember.Mixin.create({
    *
    * @private
    */
-  serializeAttribute(record, json, key, attribute) {
-    if (attribute.type !== 'file' || record.get(`${key}.isDirty`)) {
-      this._super(record, json, key, attribute);
+  serializeAttribute(snapshot, json, key, attribute) {
+    if (attribute.type !== 'file' || snapshot.attr(key).get('isDirty')) {
+      this._super(snapshot, json, key, attribute);
     }
   }
 });

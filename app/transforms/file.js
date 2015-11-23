@@ -28,20 +28,11 @@ export default DS.Transform.extend({
   deserialize: function(serialized, key, typeClass, id) {
     const File = this.container.lookupFactory('object:file');
 
-    let file = File.create(serialized, config['paperclip'], {
+    return File.create(serialized, config['paperclip'], {
       key: key,
       modelName: typeClass.modelName,
       id: id,
       isEmpty: Ember.isEmpty(serialized)
-    });
-
-    return Ember.computed({
-      get() {
-        return file;
-      },
-      set(file) {
-        return file.update(file);
-      }
     });
   },
 

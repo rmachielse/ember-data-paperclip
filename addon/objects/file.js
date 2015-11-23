@@ -47,6 +47,13 @@ export default Ember.Object.extend({
   isDirty: false,
 
   /**
+   * Wether the file has been set or changed
+   *
+   * @public
+   */
+  isEmptyOrDirty: Ember.computed.or('isEmpty', 'isDirty'),
+
+  /**
    * The base64 file source
    *
    * If set, the data will be sent to the server on save
@@ -171,11 +178,13 @@ export default Ember.Object.extend({
    * @public
    */
   objectURL(style) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      this.blob(style).then((blob) => {
-        resolve(window.URL.createObjectURL(blob));
-      }, reject);
-    });
+    if (!this.get('isEmpty')) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        this.blob(style).then((blob) => {
+          resolve(window.URL.createObjectURL(blob));
+        }, reject);
+      });
+    }
   },
 
   /**
@@ -192,17 +201,19 @@ export default Ember.Object.extend({
    * @public
    */
   dataURL(style) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      this.blob(style).then((blob) => {
-        let reader = new FileReader();
+    if (!this.get('isEmpty')) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        this.blob(style).then((blob) => {
+          let reader = new FileReader();
 
-        reader.onload = (e) => {
-          resolve(e.target.result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataUrl(blob);
-      }, reject);
-    });
+          reader.onload = (e) => {
+            resolve(e.target.result);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        }, reject);
+      });
+    }
   },
 
   /**
@@ -212,7 +223,7 @@ export default Ember.Object.extend({
    *   ...
    *
    *   change: function (e) {
-   *     this.get('product').set('photo', e.target.files[0]);
+   *     this.get('product').get('photo').update(e.target.files[0]);
    *   },
    *
    *   ...
@@ -241,9 +252,11 @@ export default Ember.Object.extend({
 
       reader.onload = (e) => {
         this.set('data', e.target.result);
+        this.set('isEmpty', false);
+        this.set('isDirty', true);
       };
       reader.onerror = reject;
-      reader.readAsDataUrl(file);
+      reader.readAsDataURL(file);
     });
   },
 
@@ -275,13 +288,13 @@ export default Ember.Object.extend({
   },
 
   /**
-   * Recover the file
+   * Rollback the file
    *
    * This will undo a clear action
    *
    * @public
    */
-  recover() {
+  rollback() {
     this.set('isEmpty', false);
     this.set('isDirty', true);
   },
@@ -295,6 +308,8 @@ export default Ember.Object.extend({
   serialize() {
     if (!this.get('isEmpty')) {
       return this.get('data');
+    } else {
+      return null;
     }
   }
 });
