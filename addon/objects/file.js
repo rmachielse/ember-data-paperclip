@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { RSVP, Evented, A, inject, computed, isEmpty } = Ember;
+const { RSVP, Evented, inject, computed, isEmpty } = Ember;
 const { Promise } = RSVP;
 const { service } = inject;
 
@@ -112,7 +112,9 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   class: computed('modelName', function() {
-    return this.get('modelName').pluralize();
+    if (!isEmpty(this.get('modelName'))) {
+      return this.get('modelName').pluralize();
+    }
   }),
 
   /**
@@ -121,7 +123,9 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   attachment: computed('key', function() {
-    return this.get('key').pluralize();
+    if (!isEmpty(this.get('key'))) {
+      return this.get('key').pluralize();
+    }
   }),
 
   /**
@@ -130,12 +134,18 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   id_partition: computed('id', function() {
-    let id = parseInt(this.get('id'));
+    if (!isEmpty(this.get('id'))) {
+      if (isNaN(this.get('id'))) {
+        return this.get('id').replace(/(....)/g, '/$1').slice(1);
+      } else {
+        let id = String(this.get('id'));
 
-    if (isNaN(id)) {
-      return id.replace(/(....)/g, '/$1').slice(1);
-    } else {
-      return id.pad(9).replace(/(...)/g, '/$1').slice(1);
+        while (id.length < 9) {
+          id = `0${id}`;
+        }
+
+        return id.replace(/(...)/g, '/$1').slice(1);
+      }
     }
   }),
 
@@ -145,7 +155,7 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   variables: computed('path', function() {
-    return new A(new A(this.get('path').match(this.get('regex')).map((match) => {
+    return this.get('path').match(this.get('regex')).map((match) => {
       match = match.slice(1);
 
       if (!isEmpty(this.get(`model.${match}`))) {
@@ -153,7 +163,7 @@ export default Ember.Object.extend(Evented, {
       } else if (!isEmpty(this.get(match))) {
         return `${this.get('key')}.${match}`;
       }
-    })).compact());
+    }).compact();
   }),
 
   /**
