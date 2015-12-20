@@ -3,7 +3,7 @@
 
 var options = {
   modulePrefix: 'ember-data-paperclip',
-  filter: '//.*ember-data-paperclip/.*/',
+  filter: '//.*(ember-data-paperclip)/.*/',
   antifilter: '//.*(tests|template).*/',
   loaderExclusions: [],
   enableCoverage: true,

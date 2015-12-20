@@ -223,14 +223,16 @@ describeModule('object:file', 'FileObject', { needs: ['model:product'] }, functi
         it('should be a blob', () => {
           return file.blob().then((blob) => {
             expect(blob).to.be.an('object');
+            expect(blob).to.be.instanceof(window.Blob);
           });
         });
       });
 
       describe('with style thumbnail', () => {
-        it('should be a thumbnail url', () => {
+        it('should be a thumbnail blob', () => {
           return file.blob('thumbnail').then((blob) => {
             expect(blob).to.be.an('object');
+            expect(blob).to.be.instanceof(window.Blob);
           });
         });
       });
@@ -322,9 +324,15 @@ describeModule('object:file', 'FileObject', { needs: ['model:product'] }, functi
   describe('#update', () => {
     describe('without a file', () => {
       beforeEach(function() {
-        file = this.subject();
+        file = this.subject({
+          isEmpty: false,
+          path: ':attachment/:style.png',
+          key: 'photo'
+        });
 
-        file.update();
+        return file.blob().then((blob) => {
+          file.update(blob);
+        });
       });
 
       it('should not update the file', () => {
