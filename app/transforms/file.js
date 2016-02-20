@@ -1,9 +1,8 @@
 import Ember from 'ember';
-import DS from 'ember-data';
+import Transform from 'ember-data/transform';
 import config from '../config/environment';
 
-const { isEmpty } = Ember;
-const { Transform } = DS;
+const { isEmpty, getOwner } = Ember;
 
 /**
  * A file transform for Ember-Data.
@@ -12,10 +11,11 @@ const { Transform } = DS;
  *
  * ```javascript
  * // app/models/product.js
- * import DS from 'ember-data';
+ * import Model from 'ember-data/model';
+ * import attr from 'ember-data/attr';
  *
- * export default DS.Model.extend({
- *   photo: DS.attr('file')
+ * export default Model.extend({
+ *   photo: attr('file')
  * })
  * ```
  *
@@ -29,7 +29,7 @@ export default Transform.extend({
    * @public
    */
   deserialize: function(serialized, key, typeClass, id) {
-    const File = this.container.lookupFactory('object:file');
+    const File = getOwner(this)._lookupFactory('object:file');
 
     return File.create(serialized, config['paperclip'], {
       key: key,

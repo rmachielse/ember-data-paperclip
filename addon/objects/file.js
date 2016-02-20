@@ -1,8 +1,6 @@
 import Ember from 'ember';
 
-const { RSVP, Evented, inject, computed, isEmpty } = Ember;
-const { Promise } = RSVP;
-const { service } = inject;
+const { RSVP: { Promise }, Evented, inject: { service }, computed, isEmpty } = Ember;
 
 /**
  * The File object

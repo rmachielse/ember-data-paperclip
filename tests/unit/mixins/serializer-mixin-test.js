@@ -6,7 +6,7 @@ import SerializerMixinMixin from 'ember-data-paperclip/mixins/serializer-mixin';
 
 describe('SerializerMixin', function() {
   it('works', function() {
-    const SerializerMixinObject = Ember.Object.extend(SerializerMixinMixin);
+    let SerializerMixinObject = Ember.Object.extend(SerializerMixinMixin);
 
     let mixin = SerializerMixinObject.create();
 

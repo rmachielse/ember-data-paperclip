@@ -11,7 +11,7 @@ const { computed, isEmpty } = Ember;
  * ```javascript
  *   ...,
  *
- *   photo: DS.attr('file'),
+ *   photo: attr('file'),
  *   photoURL: fileURL('file'),
  *
  *   ...

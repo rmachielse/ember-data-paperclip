@@ -4,12 +4,14 @@ import { describe, it, beforeEach } from 'mocha';
 import Ember from 'ember';
 import { initialize } from 'ember-data-paperclip/initializers/file';
 
+const { Application, run } = Ember;
+
 describe('FileInitializer', function() {
   let container, application;
 
   beforeEach(() => {
-    Ember.run(() => {
-      application = Ember.Application.create();
+    run(() => {
+      application = Application.create();
       container = application.__container__;
       application.deferReadiness();
     });

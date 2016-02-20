@@ -19,10 +19,10 @@ After installation, add the serializer-mixin to your serializer:
 ```javascript
 // app/serializers/application.js
 
-import DS from 'ember-data';
+import ActiveModelSerializer from 'active-model-serializer';
 import SerializerMixin from 'ember-data-paperclip/mixins/serializer-mixin';
 
-export default DS.ActiveModelSerializer.extend(SerializerMixin);
+export default ActiveModelSerializer.extend(SerializerMixin);
 ```
 
 ## Configuration
@@ -64,13 +64,16 @@ If you need other variables or want to override the default ones, there are thre
      ```javascript
      // app/models/product.js
 
-     import DS from 'ember-data';
+     import Model from 'ember-data/model';
+     import attr from 'ember-data/attr';
      import Ember from 'ember';
 
-     export default DS.Model.extend({
-       photo: DS.attr('file'),
+     const { computed } = Ember;
 
-       id_partition: Ember.computed('id', function() {
+     export default Model.extend({
+       photo: attr('file'),
+
+       id_partition: computed('id', function() {
          return this.get('id');
        })
      });
@@ -101,10 +104,11 @@ In your model add a `file` attribute:
 ```javascript
 // app/models/product.js
 
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
 
-export default DS.Model.extend({
-  photo: DS.attr('file')
+export default Model.extend({
+  photo: attr('file')
 });
 ```
 
@@ -139,13 +143,14 @@ product.get('photo').dataURL('thumbnail').then((thumbnailDataURL) => {
 Utilities to use these urls like computed properties are available as well:
 
 ```javascript
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
 import fileURL from 'ember-data-paperclip/utils/file-url';
 import dataURL from 'ember-data-paperclip/utils/data-url';
 import objectURL from 'ember-data-paperclip/utils/object-url';
 
-export DS.Model.extend({
-  photo: DS.attr('file'),
+export Model.extend({
+  photo: attr('file'),
 
   photoThumbnailURL: fileURL('photo', 'thumbnail'),
 

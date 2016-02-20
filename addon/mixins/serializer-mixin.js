@@ -8,10 +8,10 @@ const { Mixin } = Ember;
  * ```javascript
  * // app/serializers/application.js
  *
- * import DS from 'ember-data';
+ * import ActiveModelSerializer from 'active-model-serializer';
  * import SerializerMixin from 'ember-data-paperclip/mixins/serializer-mixin';
  *
- * export default DS.ActiveModelSerializer.extend(SerializerMixin);
+ * export default ActiveModelSerializer.extend(SerializerMixin);
  * ```
  *
  * @module ember-data-paperclip/mixins/serializer-mixin

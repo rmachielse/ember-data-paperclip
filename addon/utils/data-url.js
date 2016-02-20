@@ -13,7 +13,7 @@ const { PromiseObject } = DS;
  * ```javascript
  *   ...,
  *
- *   photo: DS.attr('file'),
+ *   photo: attr('file'),
  *   photoDataURL: dataURL('file'),
  *
  *   ...

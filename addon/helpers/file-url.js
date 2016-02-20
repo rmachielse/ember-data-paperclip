@@ -1,7 +1,6 @@
 import Ember from 'ember';
 
-const { Helper } = Ember;
-const { helper } = Helper;
+const { Helper: { helper } } = Ember;
 
 export function fileUrl(params) {
   let [file, style] = params;
