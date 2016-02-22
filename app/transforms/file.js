@@ -1,8 +1,10 @@
 import Ember from 'ember';
-import Transform from 'ember-data/transform';
+import DS from 'ember-data';
+import getOwner from 'ember-getowner-polyfill';
 import config from '../config/environment';
 
-const { isEmpty, getOwner } = Ember;
+const { isEmpty } = Ember;
+const { Transform } = DS;
 
 /**
  * A file transform for Ember-Data.

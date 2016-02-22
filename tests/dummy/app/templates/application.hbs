@@ -1,3 +1,64 @@
-<h2 id="title">Welcome to Ember</h2>
+<div class="container">
+  <div class="page-header">
+    <h1>Ember Data Paperclip</h1>
+    <p class="lead">
+      This addon provides an ember file attribute to use with <a href="https://github.com/thoughtbot/paperclip" target="_blank">rails paperclip</a>.
+    </p>
+  </div>
 
-{{outlet}}
+  <h3>File URL</h3>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <pre>&lt;img src=&#123;&#123;file-url model.photo 'thumbnail'&#125;&#125; /&gt;</pre>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <img src={{file-url model.photo 'thumbnail'}} />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <pre>&lt;img src=&#123;&#123;file-url model.photo&#125;&#125; /&gt;</pre>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <img src={{file-url model.photo}} />
+    </div>
+  </div>
+
+  <h3>Data URL</h3>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <pre>import Ember from 'ember';
+import dataURL from 'ember-data-paperclip/utils/dataURL';
+
+const { Component } = Ember;
+
+export default Component.extend({
+  dataURL: dataURL('model.photo')
+});
+</pre>
+      <pre>&lt;img src=&#123;&#123;dataURL.content&#125;&#125; /&gt;</pre>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <img src={{dataURL.content}} />
+    </div>
+  </div>
+
+  <h3>Object URL</h3>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <pre>import Ember from 'ember';
+import objectURL from 'ember-data-paperclip/utils/objectURL';
+
+const { Component } = Ember;
+
+export default Component.extend({
+  objectURL: objectURL('model.photo')
+});
+</pre>
+      <pre>&lt;img src=&#123;&#123;objectURL.content&#125;&#125; /&gt;</pre>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <img src={{objectURL.content}} />
+    </div>
+  </div>
+</div>

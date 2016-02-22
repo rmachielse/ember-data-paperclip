@@ -6,12 +6,10 @@ Please note that this addon is still a work in progress.
 
 ## Installation
 
-Add the following to your `package.json` and run `npm install`:
+Install the addon with the following command:
 
-```javascript
-  ...
-  "ember-data-paperclip": "rmachielse/ember-data-paperclip",
-  ...
+```
+ember install ember-data-paperclip
 ```
 
 After installation, add the serializer-mixin to your serializer:
@@ -163,7 +161,7 @@ export Model.extend({
 A template helper is also available:
 
 ```handlebars
-{{file-url product.photo 'thumbnail'}}
+<img src={{file-url product.photo 'thumbnail'}} />
 ```
 
 ### Setting

@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 
-const { computed, isEmpty } = Ember;
+const { computed, isEmpty, isPresent } = Ember;
 const { PromiseObject } = DS;
 
 /**
@@ -39,7 +39,7 @@ export default function objectURL(fileKey, style) {
 
     let url = this.get(fileKey).objectURL(style);
 
-    if (!isEmpty(url)) {
+    if (isPresent(url)) {
       return PromiseObject.create({
         promise: url
       });

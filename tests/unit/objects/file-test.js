@@ -3,7 +3,11 @@ import { expect } from 'chai';
 import { describeModule, it } from 'ember-mocha';
 import { describe, beforeEach } from 'mocha';
 
-describeModule('object:file', 'FileObject', { needs: ['model:product'] }, function() {
+describeModule('object:file', 'FileObject', { needs: [
+  'adapter:application',
+  'serializer:application',
+  'model:product'
+] }, function() {
   let file;
 
   describe('#model', () => {

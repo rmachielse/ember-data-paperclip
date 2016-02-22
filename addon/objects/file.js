@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { RSVP: { Promise }, Evented, inject: { service }, computed, isEmpty } = Ember;
+const { RSVP: { Promise }, Evented, inject: { service }, computed, isEmpty, isPresent } = Ember;
 
 /**
  * The File object
@@ -99,7 +99,7 @@ export default Ember.Object.extend(Evented, {
    * @private
    */
   model: computed('modelName', 'id', function() {
-    if (!isEmpty(this.get('modelName')) && !isEmpty(this.get('id'))) {
+    if (isPresent(this.get('modelName')) && isPresent(this.get('id'))) {
       return this.get('store').find(this.get('modelName'), this.get('id'));
     }
   }),
@@ -110,7 +110,7 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   class: computed('modelName', function() {
-    if (!isEmpty(this.get('modelName'))) {
+    if (isPresent(this.get('modelName'))) {
       return this.get('modelName').pluralize();
     }
   }),
@@ -121,7 +121,7 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   attachment: computed('key', function() {
-    if (!isEmpty(this.get('key'))) {
+    if (isPresent(this.get('key'))) {
       return this.get('key').pluralize();
     }
   }),
@@ -132,7 +132,7 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   id_partition: computed('id', function() {
-    if (!isEmpty(this.get('id'))) {
+    if (isPresent(this.get('id'))) {
       if (isNaN(this.get('id'))) {
         return this.get('id').replace(/(....)/g, '/$1').slice(1);
       } else {
@@ -156,9 +156,9 @@ export default Ember.Object.extend(Evented, {
     return this.get('path').match(this.get('regex')).map((match) => {
       match = match.slice(1);
 
-      if (!isEmpty(this.get(`model.${match}`))) {
+      if (isPresent(this.get(`model.${match}`))) {
         return match;
-      } else if (!isEmpty(this.get(match))) {
+      } else if (isPresent(this.get(match))) {
         return `${this.get('key')}.${match}`;
       }
     }).compact();
@@ -172,7 +172,7 @@ export default Ember.Object.extend(Evented, {
    * @private
    */
   init() {
-    if (!isEmpty(this.get('model'))) {
+    if (isPresent(this.get('model'))) {
       this.get('model').then(() => {
         this.get('model.content').on('rolledBack', this, this.rollback);
       });
@@ -205,9 +205,9 @@ export default Ember.Object.extend(Evented, {
 
         if (match === 'style') {
           return style;
-        } else if (!isEmpty(this.get(`model.${match}`))) {
+        } else if (isPresent(this.get(`model.${match}`))) {
           return this.get(`model.${match}`);
-        } else if (!isEmpty(this.get(match))) {
+        } else if (isPresent(this.get(match))) {
           return this.get(match);
         }
       });
