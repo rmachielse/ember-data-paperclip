@@ -10,6 +10,20 @@ describeModule('object:file', 'FileObject', { needs: [
 ] }, function() {
   let file;
 
+  beforeEach(function() {
+    let store = this.container.lookup('service:store');
+    store.push({
+      data: [{
+        id: 1,
+        type: 'product',
+        attributes: {
+          name: 'Example product'
+        },
+        relationships: {}
+      }]
+    });
+  });
+
   describe('#model', () => {
     describe('without a modelName or id', () => {
       beforeEach(function() {
@@ -321,26 +335,6 @@ describeModule('object:file', 'FileObject', { needs: [
             expect(dataURL).to.have.string('base64');
           });
         });
-      });
-    });
-  });
-
-  describe('#update', () => {
-    describe('without a file', () => {
-      beforeEach(function() {
-        file = this.subject({
-          isEmpty: false,
-          path: ':attachment/:style.png',
-          key: 'photo'
-        });
-
-        return file.blob().then((blob) => {
-          file.update(blob);
-        });
-      });
-
-      it('should not update the file', () => {
-        expect(file.get('isDirty')).to.be.false;
       });
     });
   });

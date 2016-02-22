@@ -12,6 +12,9 @@ module.exports = function(defaults) {
     },
     jscsOptions: {
       testGenerator: testGenerator
+    },
+    'ember-cli-bootstrap-sassy': {
+      quiet: true
     }
   });
 

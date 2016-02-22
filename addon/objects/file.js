@@ -100,7 +100,7 @@ export default Ember.Object.extend(Evented, {
    */
   model: computed('modelName', 'id', function() {
     if (isPresent(this.get('modelName')) && isPresent(this.get('id'))) {
-      return this.get('store').find(this.get('modelName'), this.get('id'));
+      return this.get('store').peekRecord(this.get('modelName'), this.get('id'));
     }
   }),
 
@@ -173,9 +173,7 @@ export default Ember.Object.extend(Evented, {
    */
   init() {
     if (isPresent(this.get('model'))) {
-      this.get('model').then(() => {
-        this.get('model.content').on('rolledBack', this, this.rollback);
-      });
+      this.get('model').on('rolledBack', this, this.rollback);
     }
   },
 
@@ -195,7 +193,7 @@ export default Ember.Object.extend(Evented, {
    * @public
    */
   url(style) {
-    if (!this.get('isNew') && !this.get('isEmpty')) {
+    if (!this.get('isNew') && !this.get('isEmpty') && !this.get('isDirty')) {
       if (isEmpty(style)) {
         style = this.get('defaultStyle');
       }
