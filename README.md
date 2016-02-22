@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/rmachielse/ember-data-paperclip.svg)](https://travis-ci.org/rmachielse/ember-data-paperclip)
 
 This addon provides an ember file attribute to use with [rails paperclip](https://github.com/thoughtbot/paperclip).
+A demo can be found [here](http://rmachielse.github.io/ember-data-paperclip/).
 Please note that this addon is still a work in progress.
 
 ## Installation
@@ -214,6 +215,7 @@ This will send the following to the backend:
 
 ### Limitations
 - FormData is not yet supported. Uploads happen using json and base64 at the moment.
+- The addon overrides some of the transform logic. This needs to be updated once [ds-transform-pass-options](https://github.com/emberjs/rfcs/blob/master/text/0001-transform-attribute-meta-parameter.md) is being implemented.
 
 ## License
 

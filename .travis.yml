@@ -36,3 +36,11 @@ script:
 
 notifications:
   email: false
+
+deploy:
+  provider: script
+  script: sh deploy.sh
+  skip_cleanup: true
+  on:
+    condition: $EMBER_TRY_SCENARIO = default
+    tags: true
