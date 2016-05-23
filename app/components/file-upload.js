@@ -1,0 +1,1 @@
+export { default } from 'ember-data-paperclip/components/file-upload';

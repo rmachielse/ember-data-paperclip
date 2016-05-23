@@ -173,10 +173,16 @@ You can set the file from a file upload like this:
   ...
 
   change: function (e) {
-    this.get('product').get('photo').update(e.target.files[0]);
+    this.get('product.photo').update(e.target.files[0]);
   },
 
   ...
+```
+
+A `file-upload` component is also provided:
+
+```handlebars
+{{file-upload file=product.photo}}
 ```
 
 This will cause the following save request:

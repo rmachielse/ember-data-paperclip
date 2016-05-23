@@ -61,4 +61,34 @@ export default Component.extend({
       <img src={{objectURL.content}} />
     </div>
   </div>
+
+  <h3>Persisting</h3>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <pre>&#123;&#123;file-upload file=model.photo&#125;&#125;</pre>
+      <pre>&lt;img src=&#123;&#123;model.photo.data&#125;&#125; /&gt;</pre>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <div class="form-inline">
+        <div class="form-group">
+          {{file-upload file=model.photo class='btn btn-default form-control'}}
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default form-control" {{action 'save'}} disabled={{model.isSaving}}>
+            Save
+            {{#if model.isSaving}}
+              <i class="fa fa-spin fa-spinner"></i>
+            {{/if}}
+          </button>
+        </div>
+      </div>
+      <br />
+      {{#if model.photo.data}}
+        <img src={{model.photo.data}} class="img-responsive img-rounded" />
+      {{else if isPersisted}}
+        <small class="text-muted">Open the inspector and have a look at the network tab to see the image being persisted.</small>
+      {{/if}}
+      <br />
+    </div>
+  </div>
 </div>

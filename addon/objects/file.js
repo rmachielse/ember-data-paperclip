@@ -342,6 +342,7 @@ export default Ember.Object.extend(Evented, {
         this.set('data', e.target.result);
         this.set('isEmpty', false);
         this.set('isDirty', true);
+        resolve();
       };
       reader.onerror = reject;
 

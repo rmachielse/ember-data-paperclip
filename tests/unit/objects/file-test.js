@@ -240,7 +240,6 @@ describeModule('object:file', 'FileObject', { needs: [
       describe('without a given style', () => {
         it('should be a blob', () => {
           return file.blob().then((blob) => {
-            expect(blob).to.be.an('object');
             expect(blob).to.be.instanceof(window.Blob);
           });
         });
@@ -249,7 +248,6 @@ describeModule('object:file', 'FileObject', { needs: [
       describe('with style thumbnail', () => {
         it('should be a thumbnail blob', () => {
           return file.blob('thumbnail').then((blob) => {
-            expect(blob).to.be.an('object');
             expect(blob).to.be.instanceof(window.Blob);
           });
         });
