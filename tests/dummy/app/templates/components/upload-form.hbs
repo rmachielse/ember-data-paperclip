@@ -1,0 +1,14 @@
+<div class="form-group">
+  {{file-upload file=model.photo class='btn btn-default form-control'}}
+</div>
+<div class="form-group">
+  <button class="btn btn-default form-control" {{action 'clear'}}>Clear</button>
+</div>
+<div class="form-group">
+  <button class="btn btn-default form-control" {{action 'save'}} disabled={{model.isSaving}}>
+    Save
+    {{#if model.isSaving}}
+      <i class="fa fa-spin fa-spinner"></i>
+    {{/if}}
+  </button>
+</div>

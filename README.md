@@ -3,7 +3,6 @@
 
 This addon provides an ember file attribute to use with [rails paperclip](https://github.com/thoughtbot/paperclip).
 A demo can be found [here](http://rmachielse.github.io/ember-data-paperclip/).
-Please note that this addon is still a work in progress.
 
 ## Installation
 

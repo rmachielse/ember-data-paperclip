@@ -1,6 +1,7 @@
 {
   "predef": [
     "server",
+    "hljs",
     "document",
     "window",
     "location",

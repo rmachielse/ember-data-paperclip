@@ -34,5 +34,8 @@ module.exports = function(defaults) {
     ].join('\n');
   }
 
+  app.import(app.bowerDirectory + '/highlightjs/highlight.pack.js');
+  app.import(app.bowerDirectory + '/highlightjs/styles/github.css');
+
   return app.toTree();
 };

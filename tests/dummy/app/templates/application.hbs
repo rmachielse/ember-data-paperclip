@@ -9,7 +9,7 @@
   <h3>File URL</h3>
   <div class="row">
     <div class="col-md-6 col-xs-12">
-      <pre>&lt;img src=&#123;&#123;file-url model.photo 'thumbnail'&#125;&#125; /&gt;</pre>
+      {{#code-highlight language='htmlbars'}}&lt;img src=&#123;&#123;file-url model.photo 'thumbnail'&#125;&#125; /&gt;{{/code-highlight}}
     </div>
     <div class="col-md-6 col-xs-12">
       <img src={{file-url model.photo 'thumbnail'}} />
@@ -17,7 +17,7 @@
   </div>
   <div class="row">
     <div class="col-md-6 col-xs-12">
-      <pre>&lt;img src=&#123;&#123;file-url model.photo&#125;&#125; /&gt;</pre>
+      {{#code-highlight language='htmlbars'}}&lt;img src=&#123;&#123;file-url model.photo&#125;&#125; /&gt;{{/code-highlight}}
     </div>
     <div class="col-md-6 col-xs-12">
       <img src={{file-url model.photo}} />
@@ -27,16 +27,15 @@
   <h3>Data URL</h3>
   <div class="row">
     <div class="col-md-6 col-xs-12">
-      <pre>import Ember from 'ember';
+{{#code-highlight language='javascript'}}import Ember from 'ember';
 import dataURL from 'ember-data-paperclip/utils/dataURL';
 
 const { Component } = Ember;
 
 export default Component.extend({
   dataURL: dataURL('model.photo')
-});
-</pre>
-      <pre>&lt;img src=&#123;&#123;dataURL.content&#125;&#125; /&gt;</pre>
+});{{/code-highlight}}
+      {{#code-highlight language='htmlbars'}}&lt;img src=&#123;&#123;dataURL.content&#125;&#125; /&gt;{{/code-highlight}}
     </div>
     <div class="col-md-6 col-xs-12">
       <img src={{dataURL.content}} />
@@ -46,43 +45,46 @@ export default Component.extend({
   <h3>Object URL</h3>
   <div class="row">
     <div class="col-md-6 col-xs-12">
-      <pre>import Ember from 'ember';
+      {{#code-highlight language='javascript'}}import Ember from 'ember';
 import objectURL from 'ember-data-paperclip/utils/objectURL';
 
 const { Component } = Ember;
 
 export default Component.extend({
   objectURL: objectURL('model.photo')
-});
-</pre>
-      <pre>&lt;img src=&#123;&#123;objectURL.content&#125;&#125; /&gt;</pre>
+});{{/code-highlight}}
+      {{#code-highlight language='htmlbars'}}&lt;img src=&#123;&#123;objectURL.content&#125;&#125; /&gt;{{/code-highlight}}
     </div>
     <div class="col-md-6 col-xs-12">
       <img src={{objectURL.content}} />
     </div>
   </div>
 
-  <h3>Persisting</h3>
+  <h3>Updating</h3>
   <div class="row">
     <div class="col-md-6 col-xs-12">
-      <pre>&#123;&#123;file-upload file=model.photo&#125;&#125;</pre>
-      <pre>&lt;img src=&#123;&#123;model.photo.data&#125;&#125; /&gt;</pre>
+      {{#code-highlight language='javascript'}}import Ember from 'ember';
+
+const { Component } = Ember;
+
+export default Component.extend({
+  actions: {
+    clear() {
+      this.get('model.photo').clear();
+    },
+    save() {
+      this.get('model').save();
+    }
+  }
+});{{/code-highlight}}
+      {{#code-highlight language='htmlbars'}}&#123;&#123;file-upload file=model.photo&#125;&#125;
+&lt;button &#123;&#123;action='clear'&#125;&#125;&gt;&lt;/button&gt;
+&lt;button &#123;&#123;action='save'&#125;&#125;&gt;&lt;/button&gt;
+&lt;img src=&#123;&#123;model.photo.data&#125;&#125; /&gt;{{/code-highlight}}
     </div>
     <div class="col-md-6 col-xs-12">
-      <div class="form-inline">
-        <div class="form-group">
-          {{file-upload file=model.photo class='btn btn-default form-control'}}
-        </div>
-        <div class="form-group">
-          <button class="btn btn-default form-control" {{action 'save'}} disabled={{model.isSaving}}>
-            Save
-            {{#if model.isSaving}}
-              <i class="fa fa-spin fa-spinner"></i>
-            {{/if}}
-          </button>
-        </div>
-      </div>
-      {{#if model.photo.data}}
+      {{upload-form model=model}}
+      {{#if (and model.photo.isDirty (not model.photo.isEmpty))}}
         <br />
         <img src={{model.photo.data}} class="img-responsive img-rounded" />
         <br />

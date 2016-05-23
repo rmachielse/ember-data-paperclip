@@ -6,11 +6,5 @@ const { Controller } = Ember;
 
 export default Controller.extend({
   dataURL: dataURL('model.photo'),
-  objectURL: objectURL('model.photo'),
-
-  actions: {
-    save() {
-      this.get('model').save();
-    }
-  }
+  objectURL: objectURL('model.photo')
 });
