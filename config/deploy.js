@@ -3,7 +3,7 @@
 module.exports = function(deployTarget) {
   return {
     ghpages: {
-      gitRemoteUrl: 'git@github.com:rmachielse/ember-data-paperclip.git'
+      gitRemoteUrl: `https://${process.env.GITHUB_TOKEN}@github.com/rmachielse/ember-data-paperclip.git`
     }
   };
 };
