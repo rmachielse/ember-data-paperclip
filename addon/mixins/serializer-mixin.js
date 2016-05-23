@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { Mixin } = Ember;
+const { Mixin, assign, get } = Ember;
 
 /**
  * A mixin for the Ember Data serializer
@@ -31,6 +31,9 @@ export default Mixin.create({
 
     if (resourceHash) {
       this.normalizeUsingDeclaredMapping(modelClass, resourceHash);
+      if (Ember.typeOf(resourceHash.links) === 'object') {
+        this.normalizeUsingDeclaredMapping(modelClass, resourceHash.links);
+      }
 
       data = {
         id:            this.extractId(modelClass, resourceHash),
@@ -52,13 +55,21 @@ export default Mixin.create({
    * @private
    */
   applyTransforms(typeClass, data, id) {
+    let attributes = get(typeClass, 'attributes');
+
     typeClass.eachTransformedAttribute((key, attributeType) => {
-      if (!data.hasOwnProperty(key)) {
+      if (data[key] === undefined) {
         return;
       }
 
       let transform = this.transformFor(attributeType);
-      data[key] = transform.deserialize(data[key], key, typeClass, id);
+      let transformMeta = attributes && attributes.get(key);
+
+      data[key] = transform.deserialize(data[key], assign(transformMeta.options || {}, {
+        key,
+        modelName: typeClass.modelName,
+        id
+      }));
     });
 
     return data;

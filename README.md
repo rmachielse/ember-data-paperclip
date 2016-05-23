@@ -13,7 +13,8 @@ Install the addon with the following command:
 ember install ember-data-paperclip
 ```
 
-After installation, add the serializer-mixin to your serializer:
+After installation, you can optionally add the serializer-mixin to your serializer.
+You only need this if you want to use model properties in your file path (see [configuration](#configuration) point 4).
 
 ```javascript
 // app/serializers/application.js
@@ -45,6 +46,7 @@ The variables that are used above are available by default.
 If you need other variables or want to override the default ones, there are three ways to do that:
 
   1. Directly in your config file. For example, if your path begins with `:base`, you can add base like this:
+
      ```javascript
      // config/environment.js
 
@@ -57,23 +59,17 @@ If you need other variables or want to override the default ones, there are thre
 
        ...
      ```
-
-  2. By providing them on your model. For example if you want to override `id_partition`:
+  2. By adding options on the attribute. For example if the filename is always 'data':
 
      ```javascript
      // app/models/product.js
 
      import Model from 'ember-data/model';
      import attr from 'ember-data/attr';
-     import Ember from 'ember';
-
-     const { computed } = Ember;
 
      export default Model.extend({
-       photo: attr('file'),
-
-       id_partition: computed('id', function() {
-         return this.get('id');
+       photo: attr('file', {
+         filename: 'data'
        })
      });
      ```
@@ -95,6 +91,28 @@ If you need other variables or want to override the default ones, there are thre
        end
      end
      ```
+
+  4. By providing them on your model. For example if you want to override `id_partition`:
+
+     ```javascript
+     // app/models/product.js
+
+     import Model from 'ember-data/model';
+     import attr from 'ember-data/attr';
+     import Ember from 'ember';
+
+     const { computed } = Ember;
+
+     export default Model.extend({
+       photo: attr('file'),
+
+       id_partition: computed('id', function() {
+         return this.get('id');
+       })
+     });
+     ```
+
+     Please note that this requires the `SerializerMixin` to be included in your serializer.
 
 ## Usage
 
@@ -185,7 +203,7 @@ A `file-upload` component is also provided:
 {{file-upload file=product.photo}}
 ```
 
-This will cause the following save request:
+When saving, this will cause the following request:
 
 ```javascript
 // POST /products/1
@@ -221,7 +239,7 @@ This will send the following to the backend:
 
 ### Limitations
 - FormData is not yet supported. Uploads happen using json and base64 at the moment.
-- The addon overrides some of the transform logic. This needs to be updated once [ds-transform-pass-options](https://github.com/emberjs/rfcs/blob/master/text/0001-transform-attribute-meta-parameter.md) is being implemented.
+- The optional serializer mixin overrides some of the internal transform logic. This currently only works for the json and active model serializers.
 
 ## License
 

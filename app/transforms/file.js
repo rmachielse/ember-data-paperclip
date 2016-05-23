@@ -3,7 +3,7 @@ import DS from 'ember-data';
 import getOwner from 'ember-getowner-polyfill';
 import config from '../config/environment';
 
-const { isEmpty } = Ember;
+const { isEmpty, copy, assign } = Ember;
 const { Transform } = DS;
 
 /**
@@ -30,17 +30,14 @@ export default Transform.extend({
    *
    * @public
    */
-  deserialize: function(serialized, key, typeClass, id) {
+  deserialize: function(serialized, attributeMeta) {
     const File = getOwner(this)._lookupFactory('object:file');
 
-    return File.create(serialized, config['paperclip'], {
-      key: key,
-      modelName: typeClass.modelName,
-      id: id,
+    return File.create(serialized, config.paperclip, assign(copy(attributeMeta), {
       isNew: isEmpty(serialized),
       isEmpty: isEmpty(serialized),
       attributes: Object.keys(serialized || {})
-    });
+    }));
   },
 
   /**
