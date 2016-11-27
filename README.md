@@ -1,5 +1,6 @@
 # Ember Data Paperclip
 [![Build Status](https://travis-ci.org/rmachielse/ember-data-paperclip.svg)](https://travis-ci.org/rmachielse/ember-data-paperclip)
+[![Ember Observer Score](https://emberobserver.com/badges/ember-data-paperclip.svg)](https://emberobserver.com/addons/ember-data-paperclip)
 
 This addon provides an ember file attribute to use with [rails paperclip](https://github.com/thoughtbot/paperclip).
 A demo can be found [here](http://rmachielse.github.io/ember-data-paperclip/).
