@@ -34,7 +34,7 @@ export default function dataURL(fileKey, style) {
     let property = this[urlKey];
 
     if (isEmpty(property._dependentKeys)) {
-      property.property.apply(property, this.get(`${fileKey}.variables`).addObjects(['photo.isNew', 'photo.isEmpty']));
+      property.property(...this.get(`${fileKey}.variables`).addObjects(['photo.isNew', 'photo.isEmpty']));
     }
 
     let url = this.get(fileKey).dataURL(style);

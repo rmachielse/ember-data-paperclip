@@ -1,25 +1,30 @@
-/* jshint expr:true */
 import { expect } from 'chai';
-import { describe, it, beforeEach } from 'mocha';
+import { describe, it, beforeEach, afterEach } from 'mocha';
 import Ember from 'ember';
-import { initialize } from 'ember-data-paperclip/initializers/file';
+import { initialize } from 'dummy/initializers/file';
+import destroyApp from '../../helpers/destroy-app';
 
 const { Application, run } = Ember;
 
-describe('FileInitializer', function() {
-  let container, application;
+describe('Unit | Initializer | file', function() {
+  let application;
 
-  beforeEach(() => {
-    run(() => {
+  beforeEach(function() {
+    run(function() {
       application = Application.create();
-      container = application.__container__;
       application.deferReadiness();
     });
   });
 
-  it('works', function() {
-    initialize(container, application);
+  afterEach(function() {
+    destroyApp(application);
+  });
 
+  // Replace this with your real tests.
+  it('works', function() {
+    initialize(application);
+
+    // you would normally confirm the results of the initializer here
     expect(true).to.be.ok;
   });
 });

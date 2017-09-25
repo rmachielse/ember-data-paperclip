@@ -1,11 +1,12 @@
-/* jshint expr:true */
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import Ember from 'ember';
 import File from 'ember-data-paperclip/objects/file';
-import fileURL from 'ember-data-paperclip/utils/file-url';
+import fileUrl from 'ember-data-paperclip/utils/file-url';
 
-describe('fileURL', function() {
+const { Object: EmberObject } = Ember;
+
+describe('Unit | Utility | file url', function() {
   let file, obj;
 
   beforeEach(() => {
@@ -17,8 +18,8 @@ describe('fileURL', function() {
 
   describe('without a given style', () => {
     beforeEach(() => {
-      obj = Ember.Object.extend({
-        url: fileURL('file')
+      obj = EmberObject.extend({
+        url: fileUrl('file')
       }).create({ file });
     });
 
@@ -29,8 +30,8 @@ describe('fileURL', function() {
 
   describe('with style thumbnail', () => {
     beforeEach(() => {
-      obj = Ember.Object.extend({
-        url: fileURL('file', 'thumbnail')
+      obj = EmberObject.extend({
+        url: fileUrl('file', 'thumbnail')
       }).create({ file });
     });
 

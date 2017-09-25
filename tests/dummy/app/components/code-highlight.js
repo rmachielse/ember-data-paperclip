@@ -1,3 +1,5 @@
+/* global hljs */
+
 import Ember from 'ember';
 
 const { Component, on } = Ember;

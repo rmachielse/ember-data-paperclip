@@ -1,13 +1,16 @@
-/* jshint expr:true */
 import { expect } from 'chai';
-import { describeModule, it } from 'ember-mocha';
-import { describe, beforeEach } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
+import { setupTest } from 'ember-mocha';
 
-describeModule('object:file', 'FileObject', { needs: [
-  'adapter:application',
-  'serializer:application',
-  'model:product'
-] }, function() {
+describe('Unit | Object | file', function() {
+  setupTest('object:file', {
+    needs: [
+      'adapter:application',
+      'serializer:application',
+      'model:product'
+    ]
+  });
+
   let file;
 
   beforeEach(function() {
