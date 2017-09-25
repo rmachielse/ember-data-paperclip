@@ -2,7 +2,7 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import config from '../config/environment';
 
-const { isEmpty, copy, assign } = Ember;
+const { isEmpty, copy, assign, getOwner } = Ember;
 const { Transform } = DS;
 
 /**
@@ -30,7 +30,7 @@ export default Transform.extend({
    * @public
    */
   deserialize: function(serialized, attributeMeta) {
-    const File = Ember.getOwner(this)._lookupFactory('object:file');
+    const File = getOwner(this)._lookupFactory('object:file');
 
     return File.create(serialized, config.paperclip, assign(copy(attributeMeta), {
       isNew: isEmpty(serialized),
