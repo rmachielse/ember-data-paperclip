@@ -1,8 +1,10 @@
-/* jshint expr:true */
 import { expect } from 'chai';
-import { describeModule, it } from 'ember-mocha';
+import { describe, it } from 'mocha';
+import { setupTest } from 'ember-mocha';
 
-describeModule('transform:file', 'FileTransform', function() {
+describe('Unit | Transform | file', function() {
+  setupTest('transform:file');
+
   it('exists', function() {
     let transform = this.subject();
 

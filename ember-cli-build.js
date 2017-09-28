@@ -1,8 +1,10 @@
-/* global require, module */
-var EmberApp = require('ember-cli/lib/broccoli/ember-addon');
+/* eslint-env node */
+'use strict';
+
+const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 module.exports = function(defaults) {
-  var app = new EmberApp(defaults, {
+  let app = new EmberAddon(defaults, {
     storeConfigInMeta: false,
     fingerprint: {
       enabled: false
@@ -10,32 +12,13 @@ module.exports = function(defaults) {
     sassOptions: {
       extension: 'sass'
     },
-    jscsOptions: {
-      testGenerator: testGenerator
-    },
     'ember-cli-bootstrap-sassy': {
       quiet: true
     }
   });
 
-  function testGenerator(relativePath, errors) {
-    if (errors) {
-      errors = '\\n' + this.escapeErrorString(errors);
-    } else {
-      errors = '';
-    }
-
-    return [
-      'describe("JSCS - ' + relativePath + '", function () {',
-        'it("should pass jscs", function () {',
-          'expect(' + !errors + ', "' + relativePath + ' should pass JSCS' + errors + '").to.be.ok;',
-        '});',
-      '});'
-    ].join('\n');
-  }
-
-  app.import(app.bowerDirectory + '/highlightjs/highlight.pack.js');
-  app.import(app.bowerDirectory + '/highlightjs/styles/github.css');
+  app.import('node_modules/highlightjs/highlight.pack.js');
+  app.import('node_modules/highlightjs/styles/github.css');
 
   return app.toTree();
 };

@@ -1,15 +1,16 @@
-/* jshint expr:true */
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import Ember from 'ember';
 import SerializerMixinMixin from 'ember-data-paperclip/mixins/serializer-mixin';
 
-describe('SerializerMixin', function() {
+const { Object: EmberObject } = Ember;
+
+describe('Unit | Mixin | serializer mixin', function() {
   it('works', function() {
-    let SerializerMixinObject = Ember.Object.extend(SerializerMixinMixin);
+    let SerializerMixinObject = EmberObject.extend(SerializerMixinMixin);
 
-    let mixin = SerializerMixinObject.create();
+    let subject = SerializerMixinObject.create();
 
-    expect(mixin).to.be.ok;
+    expect(subject).to.be.ok;
   });
 });

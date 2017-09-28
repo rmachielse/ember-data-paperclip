@@ -32,7 +32,7 @@ export default function fileURL(fileKey, style) {
     let property = this[urlKey];
 
     if (isEmpty(property._dependentKeys)) {
-      property.property.apply(property, this.get(`${fileKey}.variables`).addObjects(['photo.isNew', 'photo.isEmpty']));
+      property.property(...this.get(`${fileKey}.variables`).addObjects(['photo.isNew', 'photo.isEmpty']));
     }
 
     return this.get(fileKey).url(style);

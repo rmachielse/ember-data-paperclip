@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { RSVP: { Promise }, Evented, inject: { service }, computed, isEmpty, isPresent } = Ember;
+const { RSVP: { Promise }, Object: EmberObject, Evented, inject: { service }, computed, isEmpty, isPresent } = Ember;
 
 /**
  * The File object
@@ -9,7 +9,7 @@ const { RSVP: { Promise }, Evented, inject: { service }, computed, isEmpty, isPr
  * @extends Ember.Object
  * @private
  */
-export default Ember.Object.extend(Evented, {
+export default EmberObject.extend(Evented, {
   store: service(),
 
   /**
