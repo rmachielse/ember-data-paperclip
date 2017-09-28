@@ -48,5 +48,5 @@ deploy:
   script: ember deploy production
   skip_cleanup: true
   on:
-    condition: $EMBER_TRY_SCENARIO = default
+    condition: $EMBER_TRY_SCENARIO = ember-default
     tags: true
