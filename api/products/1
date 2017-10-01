@@ -1,0 +1,9 @@
+{
+  "product": {
+    "id": 1,
+    "name": "Example product",
+    "photo": {
+      "name": "file1.jpg"
+    }
+  }
+}
