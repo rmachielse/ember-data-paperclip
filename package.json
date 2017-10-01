@@ -1,6 +1,6 @@
 {
   "name": "ember-data-paperclip",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "An Ember Data attribute for using files with rails paperclip.",
   "keywords": [
     "ember-addon"
